@@ -7,13 +7,16 @@ Base = declarative_base
 
 now = datetime.datetime.now  # Текущее время
 
+
 class BaseModel(Base):
-	__abstract__ = True
+    __abstract__ = True
 
-	id = Column(Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
-	name = Column(String(255), nullable=False, unique=True)
-	created_at = Column(DateTime, nullable=False, default=now())
-	updated_at = Column(DateTime, nullable=False, default=now(), onupdate=now())
+    id = Column(Integer, nullable=False, unique=True,
+                primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False, unique=True)
+    created_at = Column(DateTime, nullable=False, default=now())
+    updated_at = Column(DateTime, nullable=False,
+                        default=now(), onupdate=now())
 
-	def __repr__(self):
-		return f"<{self.__class__.__name__} id={self.id} name={self.name}>"
+    def __repr__(self):
+        return f"<{self.__class__.__name__} (id={self.id}, name={self.name})>"
