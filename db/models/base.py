@@ -3,12 +3,13 @@ import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime
 
-Base = declarative_base
+Base = declarative_base()
 
 now = datetime.datetime.now  # Текущее время
 
 
 class BaseModel(Base):
+    '''Базовая модель для всех (кроме выдачи книг) сущностей в базе данных'''
     __abstract__ = True
 
     id = Column(Integer, nullable=False, unique=True,

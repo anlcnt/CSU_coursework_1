@@ -4,10 +4,8 @@ from sqlalchemy.orm import relationship
 from db.models.base import BaseModel
 
 
-''' Область знаний '''
-
-
 class Field(BaseModel):
+    ''' Область знаний '''
     __tablename__ = "fields"
 
     hall_id = Column(Integer, ForeignKey('halls.id'))

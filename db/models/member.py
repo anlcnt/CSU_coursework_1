@@ -4,10 +4,8 @@ from sqlalchemy.orm import relationship
 from db.models.base import BaseModel, now
 
 
-''' Читатель '''
-
-
 class Member(BaseModel):
+    ''' Читатель '''
     __tablename__ = "members"
 
     phone = Column(String(10))  # Номер телефона без префикса

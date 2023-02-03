@@ -3,10 +3,8 @@ from sqlalchemy.orm import relationship
 from db.models.base import BaseModel
 
 
-''' Автор '''
-
-
 class Author(BaseModel):
+    ''' Автор '''
     __tablename__ = "authors"
 
     books = relationship("Book")

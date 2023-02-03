@@ -4,10 +4,8 @@ from sqlalchemy.orm import relationship
 from db.models.base import BaseModel
 
 
-''' Книга '''
-
-
 class Book(BaseModel):
+    ''' Книга '''
     __tablename__ = "books"
 
     year = Column(Integer, nullable=False)

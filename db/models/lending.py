@@ -1,13 +1,11 @@
-from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.orm import exists
+from sqlalchemy import Column, Integer, DateTime, ForeignKey
+from sqlalchemy.orm import relationship, exists
 
 from db.models.base import Base, now
 
 
-'''Выдача книг'''
-
-
 class Lending(Base):
+    '''Выдача книг'''
     __tablename__ = "lendings"
 
     id = Column(Integer, primary_key=True)
@@ -26,5 +24,5 @@ class Lending(Base):
 # Проверка наличии книги
 def book_exists(session, book):
     return session.query(Lending) \
-        .filter(Lending.book_id == book_id)
-        .filter(exists().where(Lending.returned_at == None)).scalar()
+        .filter(Lending.book_id == book.id) \
+        .filter(exists().where(Lending.returned_at is None)).scalar()
