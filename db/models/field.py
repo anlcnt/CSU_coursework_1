@@ -9,5 +9,6 @@ class Field(BaseModel):
     __tablename__ = "fields"
 
     hall_id = Column(Integer, ForeignKey('halls.id'))
+
     hall = relationship("Hall", back_populates="fields")
     books = relationship("Book", back_populates="field")

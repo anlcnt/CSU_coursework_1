@@ -1,11 +1,11 @@
-import datetime
+from datetime import datetime
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime
 
 Base = declarative_base()
 
-now = datetime.datetime.now  # Текущее время
+now = datetime.now  # Текущее время
 
 
 class BaseModel(Base):

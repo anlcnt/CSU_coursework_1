@@ -7,4 +7,4 @@ class Author(BaseModel):
     ''' Автор '''
     __tablename__ = "authors"
 
-    books = relationship("Book")
+    books = relationship("Book", back_populates="author")

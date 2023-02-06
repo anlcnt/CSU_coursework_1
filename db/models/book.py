@@ -17,4 +17,4 @@ class Book(BaseModel):
     author = relationship("Author", back_populates="books")
     publisher = relationship("Publisher", back_populates="books")
     field = relationship("Field", back_populates="books")
-    lengings = relationship("Lending", back_populates="book")
+    lendings = relationship("Lending", back_populates="book")
