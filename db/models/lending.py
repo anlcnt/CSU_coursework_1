@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
-from sqlalchemy.orm import relationship, exists
+from sqlalchemy.orm import relationship
 
 from db.models.base import Base, now
 
@@ -19,10 +19,3 @@ class Lending(Base):
 
     def __repr__(self):
         return f"<Lending (id={self.id})>"
-
-
-# Проверка наличии книги
-def book_exists(session, book):
-    return session.query(Lending) \
-        .filter(Lending.book_id == book.id) \
-        .filter(exists().where(Lending.returned_at is None)).scalar()
