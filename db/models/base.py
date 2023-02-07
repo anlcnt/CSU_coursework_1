@@ -14,7 +14,7 @@ class BaseModel(Base):
 
     id = Column(Integer, nullable=False, unique=True,
                 primary_key=True, autoincrement=True)
-    name = Column(String(255), nullable=False, unique=True)
+    name = Column(String(255), nullable=False)
     created_at = Column(DateTime, nullable=False, default=now())
     updated_at = Column(DateTime, nullable=False,
                         default=now(), onupdate=now())
