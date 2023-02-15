@@ -1,18 +1,23 @@
 import tkinter as tk
 from tkinter import ttk
 from sqlalchemy import select
-from gui.treeviews.lending import LendingTree
-from db.models.lending import Lending
+from db.models.book import Book
+from gui.treeviews.books import BooksTree
 
 
-class LendingView(tk.Frame):
-    '''Фрейм выдачи книг'''
+class BooksView(tk.Frame):
+    '''Фрейм книг'''
 
     def __init__(self, master, session):
         super().__init__(master)
         self.session = session
 
-        self.treeview = LendingTree(self)
+        add_button = tk.Button(self, text="Добавить")
+        add_button.pack()
+
+
+        # Таблица
+        self.treeview = BooksTree(self)
         ysb = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.treeview.yview)
         self.treeview.configure(yscroll=ysb.set)
         self.treeview.pack()
@@ -21,6 +26,6 @@ class LendingView(tk.Frame):
         self.bind("<Visibility>", self.update_treeview_data)
 
     def update_treeview_data(self, event):
-        query = select(Lending)
+        query = select(Book)
         result = self.session.execute(query).all()
         self.treeview.set_data(result)

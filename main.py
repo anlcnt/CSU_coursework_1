@@ -1,8 +1,14 @@
+import configparser
+
 from tkinter import Tk
 from gui.app import App
 
 
-if __name__ == '__main__':
+def run_app():
     root = Tk()
-    app = App(root)
+    app = App(root, 'sqlite:///base.db')
     app.mainloop()
+
+
+if __name__ == '__main__':
+    run_app()
