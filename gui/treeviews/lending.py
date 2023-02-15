@@ -1,9 +1,8 @@
-from tkinter.ttk import Treeview
+from gui.treeviews.base import BaseTree
+from db.models.lending import Lending
 
-from db.models.member import Member
 
-
-class LendingView(Treeview):
+class LendingTree(BaseTree):
     def __init__(self, parent):
         headers = {
             "member_id": "Номер читательского билета",
@@ -12,20 +11,15 @@ class LendingView(Treeview):
             "lended_at": "Выдана",
             "returned_at": "Возвращена"
         }
-        columns = tuple(headers.keys())
-        super().__init__(parent, show="headings", columns=columns)
+        super().__init__(headers=headers, parent=parent)
+        
+        self.tag_configure("not_returned", background="yellow")
 
-        for key in columns:
-            self.heading(key, text=headers[key])
-
-    def _columns(self):
-        return [column.key for column in Member.__table__.columns]
-
-    def push(self, lending):
-        self.insert(index="end", text=f"{lending.id}", values=[
+    def push(self, lending: Lending):
+        self.insert(parent="", index="end", text=f"{lending.id}", values=[
             lending.member_id,
             lending.member.name,
             lending.book.name,
             lending.lended_at,
-            lending.returned_at
-        ])
+            lending.returned_at or "Не возвращена"
+        ], tag="not_returned" if lending.returned_at is None else "")
