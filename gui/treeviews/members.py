@@ -18,7 +18,7 @@ class MembersTree(BaseTree):
     def push(self, member: Member):
         self.insert(parent="", index="end", iid=member.id, values=[
             member.name,
-            f"+7{member.phone}" if member.phone else "",  # Так, наверное, делать не стоит
+            f"+7{member.phone}" if member.phone else "",
             member.brith,
             member.created_at,
             member.updated_at

@@ -3,7 +3,7 @@ from db.models.hall import Hall
 
 
 class HallsTree(BaseTree):
-    '''Таблица с читателями'''
+    '''Таблица с залами'''
 
     def __init__(self, parent):
         headers = {

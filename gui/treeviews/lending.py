@@ -12,7 +12,7 @@ class LendingTree(BaseTree):
             "returned_at": "Возвращена"
         }
         super().__init__(headers=headers, parent=parent)
-        
+
         self.tag_configure("not_returned", background="yellow")
 
     def push(self, lending: Lending):
