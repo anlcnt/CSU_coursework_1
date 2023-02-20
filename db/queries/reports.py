@@ -49,11 +49,12 @@ def best_books(month: int):
     return query
 
 
-def get_hall():
+def get_hall_by_book_type():
     '''
         Вывести читальный зал в котором содержаться книги только заданных
         пользователем типов (типов при поиске может быть определено
-        несколько)
+        несколько). Условия поиска дополняется посредством where(),
+        например: get_hall_by_book_type().where(Book.pages > 100)
     '''
     query = select(Hall).join(Field).join(Book)
 
