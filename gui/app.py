@@ -16,10 +16,7 @@ class App(tk.Frame):
     def __init__(self, master, db_url="sqlite://"):
         super().__init__(master)
         # TODO: Конфигурация подключения
-        engine = create_engine(db_url, echo=True)
-        self.session = scoped_session(sessionmaker(autocommit=False,
-                                                   autoflush=False,
-                                                   bind=engine))
+        self.session = self._create_session(db_url)
         self.pack()
 
         self.tabControl = ttk.Notebook(self)
@@ -36,6 +33,8 @@ class App(tk.Frame):
         self.tabControl.add(reportTab, text="Отчёт")
         self.tabControl.pack(expand=1, fill="both")
 
-    
-    def _create_session(self, url):
-        pass
+    def _create_session(self, db_url):
+        engine = create_engine(db_url, echo=True)
+        return scoped_session(sessionmaker(autocommit=False,
+                                           autoflush=False,
+                                           bind=engine))

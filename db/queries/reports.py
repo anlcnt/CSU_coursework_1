@@ -1,3 +1,5 @@
+''' Отчёты в соответствии с заданием '''
+
 from sqlalchemy import select, func, extract
 
 from db.models.member import Member
