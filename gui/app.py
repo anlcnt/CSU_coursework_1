@@ -6,7 +6,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from gui.frames.members import MembersView
 from gui.frames.books import BooksView
 from gui.frames.lending import LendingView
-from gui.frames.halls import HallsView
+from gui.frames.fields import FieldView
 from gui.frames.report import ReportView
 
 
@@ -23,13 +23,13 @@ class App(tk.Frame):
         membersTab = MembersView(self.tabControl, self.session)
         booksTab = BooksView(self.tabControl, self.session)
         lendingTab = LendingView(self.tabControl, self.session)
-        hallTab = HallsView(self.tabControl, self.session)
+        fieldsTab = FieldView(self.tabControl, self.session)
         reportTab = ReportView(self.tabControl, self.session)
 
         self.tabControl.add(lendingTab, text="Выдача книг")
         self.tabControl.add(membersTab, text="Читательские билеты")
         self.tabControl.add(booksTab, text="Книги")
-        self.tabControl.add(hallTab, text="Залы")
+        self.tabControl.add(fieldsTab, text="Области знаний")
         self.tabControl.add(reportTab, text="Отчёт")
         self.tabControl.pack(expand=1, fill="both")
 
