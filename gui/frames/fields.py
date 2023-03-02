@@ -58,6 +58,7 @@ class FieldView(BaseView):
 
         self.treeview.configure(yscroll=ysb.set)
         self.treeview.pack()
+        self.update_treeview_data()
 
     # Обновление данных
     def update_treeview_data(self, event=None):
