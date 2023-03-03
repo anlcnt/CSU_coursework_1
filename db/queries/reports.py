@@ -7,6 +7,7 @@ from db.models.lending import Lending
 from db.models.book import Book
 from db.models.hall import Hall
 from db.models.field import Field
+from datetime import datetime
 
 
 def books_by_year(member: Member, year: int):
@@ -36,19 +37,29 @@ def oldest_books():
     return query
 
 
-def best_books(month: int):
+def best_books(date):
+    '''
+        Вывести 5 лучших книг, которые за месяц
+        пользовались наибольшим спросом.
+    '''
+    month_extracted = extract('month', Lending.lended_at)
+    year_extracted = extract('year', Lending.lended_at)
+
+    query = select(Book, func.count(Book.id)
+                   ).join(Lending
+                          ).where(month_extracted == date.month
+                                  ).where(year_extracted == date.year
+                                          ).group_by(Book.id).limit(5)
+
+    return query.limit(5)
+
+
+def best_books_by_current_month():
     '''
         Вывести 5 лучших книг, которые за прошедший месяц
         пользовались наибольшим спросом.
     '''
-    month_extracted = extract('month', Lending.lended_at)
-
-    query = select(Book, func.count(Book.id)
-                   ).join(Lending
-                          ).where(month_extracted == month
-                                  ).group_by(Book.id).limit(5)
-
-    return query
+    return best_books(datetime.now())
 
 
 def get_hall_by_book_type():

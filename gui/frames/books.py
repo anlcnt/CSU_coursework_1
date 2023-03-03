@@ -1,13 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import askyesno
+from datetime import datetime
 from sqlalchemy import select, update, insert, delete
 from db.models.book import Book
 from db.models.author import Author
 from db.models.publisher import Publisher
 from db.models.field import Field
 from gui.treeviews.books import BooksTree
-from gui.frames.base import BaseView, BaseInputFrame as BIF, error_catcher
+from gui.frames.base import BaseView, BaseControl, BaseInputFrame as BIF, error_catcher
 
 
 class BooksInputFrame(BIF):
@@ -80,7 +81,8 @@ class BooksInputFrame(BIF):
             "author_id": self.author_id(),
             "publisher_id": self.publisher_id(),
             "fields_id": self.field_id(),
-            "name": self.name_entry.get()
+            "name": self.name_entry.get(),
+            "updated_at": datetime.now()
         }
 
 
@@ -90,6 +92,9 @@ class BooksView(BaseView):
     def __init__(self, master, session):
         super().__init__(master, session)
 
+        # Управление
+        self.control = BaseControl(self)
+
         # Таблица
         self.treeview = BooksTree(self)
         y_scrollbar = ttk.Scrollbar(
@@ -97,8 +102,12 @@ class BooksView(BaseView):
             orient=tk.VERTICAL,
             command=self.treeview.yview)
         self.treeview.configure(yscroll=y_scrollbar.set)
+
+        # Обновление данных когда фрейм видимый
+        self.bind("<Visibility>", self.update_treeview_data)
+
+        self.control.pack()
         self.treeview.pack()
-        self.update_treeview_data()
 
     # Обновление данных
     def update_treeview_data(self, event=None):
@@ -118,11 +127,10 @@ class BooksView(BaseView):
 
     # Вызов окна редактирования
     def edit_data_command(self):
-        selected_id = self.treeview.focus()
-        values = self.treeview.item(selected_id)['values']
-
-        frame = BooksInputFrame(
-            tk.Toplevel(), self.session, self.edit_data_handler, selected_id)
+        iid, values = self.selected()
+        frame = BooksInputFrame(tk.Toplevel,
+                                self.session,
+                                self.edit_data_handler, iid)
 
         frame.name_entry.insert(0, values[0])
         frame.author_combobox.insert(0, values[1])
@@ -130,7 +138,6 @@ class BooksView(BaseView):
         frame.year_entry.insert(0, str(values[3]))
         frame.pages_entry.insert(0, str(values[4]))
         frame.field_combobox.insert(0, values[5])
-
         frame.pack()
 
     # Команда на удаление
@@ -166,7 +173,7 @@ class BooksView(BaseView):
         ]
 
         for c in conditions:
-            if len(c[0]):
+            if c[0]:
                 query.where(c[1])
 
         result = self.session.execute(query).all()
@@ -176,5 +183,8 @@ class BooksView(BaseView):
     @error_catcher
     def edit_data_handler(self, frame, selected_id, *args, **kwargs):
         query = update(Book).where(Book.id == selected_id)
-        query = query.values(**frame.get_data())
+        query = query.values({
+            **frame.get_data(),
+            "updated_at": datetime.now()
+        })
         self.session.execute(query)

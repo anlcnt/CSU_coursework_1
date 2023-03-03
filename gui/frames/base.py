@@ -55,27 +55,23 @@ class BaseInputFrame(tk.Frame):
                       pady=(5, 5))
 
 
-class BaseView(tk.Frame):
-    ''' Базовый фрейм представления '''
+class BaseControl(tk.Frame):
+    ''' Базовый фрейс управления таблицей '''
 
-    def __init__(self, master, session):
+    def __init__(self, master):
         super().__init__(master)
-        self.session = session
 
-        self.control = ttk.Frame(self)
+        self.add_button = ttk.Button(self, text="Добавить")
+        self.edit_button = ttk.Button(self, text="Изменить")
+        self.remove_button = ttk.Button(self, text="Удалить")
+        self.search_button = ttk.Button(self, text="Поиск")
+        self.update_button = ttk.Button(self, text="Обновить")
 
-        # Кнопки
-        self.add_button = ttk.Button(self.control, text="Добавить")
-        self.edit_button = ttk.Button(self.control, text="Изменить")
-        self.remove_button = ttk.Button(self.control, text="Удалить")
-        self.search_button = ttk.Button(self.control, text="Поиск")
-        self.update_button = ttk.Button(self.control, text="Обновить")
-
-        self.add_button.config(command=self.add_data_command)
-        self.edit_button.config(command=self.edit_data_command)
-        self.remove_button.config(command=self.remove_data_command)
-        self.search_button.config(command=self.search_data_command)
-        self.update_button.config(command=self.update_treeview_data)
+        self.add_button.config(command=master.add_data_command)
+        self.edit_button.config(command=master.edit_data_command)
+        self.remove_button.config(command=master.remove_data_command)
+        self.search_button.config(command=master.search_data_command)
+        self.update_button.config(command=master.update_treeview_data)
 
         self.add_button.pack(side=tk.LEFT)
         self.edit_button.pack(side=tk.LEFT)
@@ -83,7 +79,18 @@ class BaseView(tk.Frame):
         self.remove_button.pack(side=tk.LEFT)
         self.update_button.pack(side=tk.LEFT)
 
-        self.control.pack()
+
+class BaseView(tk.Frame):
+    ''' Базовый фрейм представления '''
+
+    def __init__(self, master, session):
+        super().__init__(master)
+        self.session = session
+
+    # Возвращает id и значения выбранного элемента таблицы
+    def selected(self):
+        iid = self.treeview.focus()
+        return iid, self.treeview.item(iid)['values']
 
     # Вызов окна добавления
     def add_data_command(self):

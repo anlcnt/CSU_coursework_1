@@ -13,13 +13,15 @@ class LendingTree(BaseTree):
         }
         super().__init__(headers=headers, parent=parent)
 
-        self.tag_configure("not_returned", background="yellow")
+        self.tag_configure("not_returned", background="lightgray")
 
     def push(self, lending: Lending):
-        self.insert(parent="", index="end", text=f"{lending.id}", values=[
+        dt_f = "%d.%m.%Y %H:%M:%S"
+
+        self.insert(parent="", index="end", iid=lending.id, values=[
             lending.member_id,
             lending.member.name,
             lending.book.name,
-            lending.lended_at,
-            lending.returned_at or "Не возвращена"
-        ], tag="not_returned" if lending.returned_at is None else "")
+            lending.lended_at.strftime(dt_f),
+            lending.returned_at.strftime(dt_f) if lending.returned_at else ""
+        ], tag="returned" if lending.returned_at else "not_returned")

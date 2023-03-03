@@ -1,11 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import askyesno
+from datetime import datetime
 from sqlalchemy import select, insert, update, delete
 from db.models.field import Field
 from db.models.hall import Hall
 from gui.treeviews.fields import FieldsTree
-from gui.frames.base import BaseView, BaseInputFrame as BIF, error_catcher
+from gui.frames.base import BaseView, BaseControl, BaseInputFrame as BIF, error_catcher
 
 
 class FieldInputFrame(BIF):
@@ -41,7 +42,8 @@ class FieldInputFrame(BIF):
     def get_data(self):
         return {
             "name": self.name_entry.get(),
-            "hall_id": self.hall_id()
+            "hall_id": self.hall_id(),
+            "updated_at": datetime.now()
         }
 
 
@@ -51,14 +53,22 @@ class FieldView(BaseView):
     def __init__(self, master, session):
         super().__init__(master, session)
 
+        # Управление
+        self.control = BaseControl(self)
+
+        # Таблица
         self.treeview = FieldsTree(self)
         ysb = ttk.Scrollbar(self,
                             orient=tk.VERTICAL,
                             command=self.treeview.yview)
 
         self.treeview.configure(yscroll=ysb.set)
+
+        # Обновление данных когда фрейм видимый
+        self.bind("<Visibility>", self.update_treeview_data)
+
+        self.control.pack()
         self.treeview.pack()
-        self.update_treeview_data()
 
     # Обновление данных
     def update_treeview_data(self, event=None):
@@ -78,15 +88,13 @@ class FieldView(BaseView):
 
     # Вызов окна редактирования
     def edit_data_command(self):
-        selected_id = self.treeview.focus()
-        values = self.treeview.item(selected_id)['values']
-
-        frame = FieldInputFrame(
-            tk.Toplevel(), self.session, self.edit_data_handler, selected_id)
+        iid, values = self.selected()
+        frame = FieldInputFrame(tk.Toplevel,
+                                self.session,
+                                self.edit_data_handler, iid)
 
         frame.name_entry.insert(0, values[0])
         frame.hall_combobox.insert(0, values[1])
-
         frame.pack()
 
     # Команда на удаление
@@ -114,7 +122,7 @@ class FieldView(BaseView):
         ]
 
         for c in conditions:
-            if len(c[0]):
+            if c[0]:
                 query.where(c[1])
 
         result = self.session.execute(query).all()
@@ -124,5 +132,8 @@ class FieldView(BaseView):
     @error_catcher
     def edit_data_handler(self, frame, selected_id, *args, **kwargs):
         query = update(Field).where(Field.id == selected_id)
-        query = query.values(**frame.get_data())
+        query = query.values({
+            **frame.get_data(),
+            "updated_at": datetime.now()
+        })
         self.session.execute(query)

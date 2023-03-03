@@ -16,10 +16,12 @@ class MembersTree(BaseTree):
         super().__init__(headers=headers, parent=parent)
 
     def push(self, member: Member):
+        dt_f = "%d.%m.%Y %H:%M:%S"
+
         self.insert(parent="", index="end", iid=member.id, values=[
             member.name,
             f"+7{member.phone}" if member.phone else "",
-            member.brith,
-            member.created_at,
-            member.updated_at
+            member.brith.strftime("%d.%m.%Y"),
+            member.created_at.strftime(dt_f),
+            member.updated_at.strftime(dt_f)
         ])

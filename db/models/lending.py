@@ -12,7 +12,7 @@ class Lending(Base):
     member_id = Column(Integer, ForeignKey("members.id"))
     book_id = Column(Integer, ForeignKey("books.id"))
     lended_at = Column(DateTime, nullable=False, default=now())
-    returned_at = Column(DateTime, default=now())
+    returned_at = Column(DateTime)
 
     member = relationship("Member", back_populates="lendings")
     book = relationship("Book", back_populates="lendings")
