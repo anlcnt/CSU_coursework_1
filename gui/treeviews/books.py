@@ -11,6 +11,7 @@ class BooksTree(BaseTree):
             "author": "Автор",
             "publisher": "Издатель",
             "year": "Год издания",
+            "place": "Город",
             "pages": "Кол-во страниц",
             "fiels": "Область знаний",
             "hall": "Зал",
@@ -23,6 +24,7 @@ class BooksTree(BaseTree):
             book.author.name,
             book.publisher.name,
             book.year,
+            book.publisher.place,
             book.pages,
             book.field.name,
             book.field.hall.name

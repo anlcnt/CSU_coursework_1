@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import askyesno
+from tkinter.simpledialog import askstring
 from datetime import datetime
 from sqlalchemy import select, update, insert, delete
 from db.models.book import Book
@@ -69,7 +70,12 @@ class BooksInputFrame(BIF):
             return self.publishers[self.publisher_combobox.get()]
 
         if askyesno(message="Указанный издатель отсутствует. Создать?"):
-            self.create_new_record(Publisher, name=publisher)
+            place = askstring("Город",
+                              "Укажите город издателя",
+                              initialvalue="Москва")
+            if not place:
+                raise ValueError("Создание издателя отменено")
+            self.create_new_record(Publisher, name=publisher, place=place)
             return len(self.publishers) + 1
 
         raise ValueError("Указанный издатель отсутствует в базе")
@@ -128,7 +134,7 @@ class BooksView(BaseView):
     # Вызов окна редактирования
     def edit_data_command(self):
         iid, values = self.selected()
-        frame = BooksInputFrame(tk.Toplevel,
+        frame = BooksInputFrame(tk.Toplevel(),
                                 self.session,
                                 self.edit_data_handler, iid)
 
@@ -136,8 +142,8 @@ class BooksView(BaseView):
         frame.author_combobox.insert(0, values[1])
         frame.publisher_combobox.insert(0, values[2])
         frame.year_entry.insert(0, str(values[3]))
-        frame.pages_entry.insert(0, str(values[4]))
-        frame.field_combobox.insert(0, values[5])
+        frame.pages_entry.insert(0, str(values[5]))
+        frame.field_combobox.insert(0, values[6])
         frame.pack()
 
     # Команда на удаление
