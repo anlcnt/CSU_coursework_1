@@ -68,7 +68,7 @@ class FieldView(BaseView):
         self.bind("<Visibility>", self.update_treeview_data)
 
         self.control.pack()
-        self.treeview.pack()
+        self.treeview.pack(expand=True)
 
     # Обновление данных
     def update_treeview_data(self, event=None):
@@ -89,7 +89,7 @@ class FieldView(BaseView):
     # Вызов окна редактирования
     def edit_data_command(self):
         iid, values = self.selected()
-        frame = FieldInputFrame(tk.Toplevel,
+        frame = FieldInputFrame(tk.Toplevel(),
                                 self.session,
                                 self.edit_data_handler, iid)
 

@@ -68,7 +68,7 @@ class MembersView(BaseView):
         self.bind("<Visibility>", self.update_treeview_data)
 
         self.control.pack()
-        self.treeview.pack()
+        self.treeview.pack(expand=True)
 
     # Обновление данных
     def update_treeview_data(self, event=None):
