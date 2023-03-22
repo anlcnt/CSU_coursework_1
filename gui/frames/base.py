@@ -31,10 +31,14 @@ class BaseInputFrame(tk.Frame):
 
         if handler is not None:
             self.accept_button.config(
-                command=lambda: handler(self, selected_id))
+                command=lambda: self.btn_handler(handler, selected_id))
 
         for i, label in enumerate(labels):
             ttk.Label(self, text=label).grid(row=i, column=0, sticky="e")
+
+    def btn_handler(self, handler, selected_id):
+        handler(self, selected_id)
+        self.destroy()
 
     # Возвращает данные для combobox
     def get_rows(self, model):
